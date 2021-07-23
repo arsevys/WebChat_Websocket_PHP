@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/chat.css">
+</head>
+
+<body>
+
+
+    <div class="contenedor">
+        <div class="contactos">
+            <div class="perfil activo">
+                <img id="usuario_foto" src="https://avatar.oxro.io/avatar.svg?bold=true&name=Usuario">
+                <span id="usuario_nombre" class="perfil-nombre">Usuario</span>
+            </div>
+            <br>
+            <!-- Chats Grupales -->
+            <div class="chats-individuales">
+                <p>&nbsp;Chats Grupales</p>
+                <li class="chats-individuales-contacto">
+                    <ul class="">
+                        <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=Calculo+1">
+                        <div>
+                            <span>Calculo 1</span><br>
+                            <span class="texto-min"> 14 usuarios en este chat</span>
+                        </div>
+
+                    </ul>
+                    <ul class="">
+                        <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=General">
+                        <div>
+                            <span>General</span><br>
+                            <span class="texto-min"> 10 usuarios en este chat</span>
+                        </div>
+
+                    </ul>
+
+                </li>
+            </div>
+
+            <!-- Chats Individuales -->
+            <div class="chats-individuales">
+                <p>&nbsp;Chats Individuales</p>
+                <li id="chats_individuales" class="chats-individuales-contacto">
+                    
+                </li>
+            </div>
+        </div>
+        <div class="mensajeria">
+         <div id="banner" class ="banner">
+            <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=Calculo+1">
+            <div class="contacto-detalle">
+                <span>Calculo 1 </span>
+                <br> <span class="texto-min-black"> Andy , Juan , Lopez</span>
+            </div>
+         </div>
+         <div class="contenido">
+             <div class="receptor">
+                <div class="info" >
+                    <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=Calculo+1">
+                    <div class="mensaje">
+                        <p> Calculo 1 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit soluta, laborum iusto sint distinctio ab voluptates aliquid voluptas delectus cumque 
+                            inventore quod ullam quo eius error nisi unde similique possimus!</p>
+                            <span class="contacto-nombre"> usuario x </span>
+                    </div>
+                   </div>
+             </div>
+             <div class="emisor">
+                <div class="info" >
+                    <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=Calculo+1">
+                    <div class="mensaje">
+                        <p> Calculo 1 Lorem, ipsum dolor sit amet consectetur adipisicing lorem ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe minus error exercitationem! Eius dolore corrupti sequi labore. Explicabo non maiores, optio laboriosam, voluptatibus cumque soluta et ipsum, fugiat aut officia!</p>
+                        <div class="text-right"><span class="contacto-nombre"> usuario x </span></div>
+                    </div>
+                   </div>
+             </div>
+         
+         </div>
+         <div class="footer">
+             <input type="text" placeholder="Escribir un mensaje">
+             <button >
+                 Enviar
+             </button>
+        </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+     var receptor=null;
+    </script>
+    <script type="text/javascript" src="assets/js/acciones.js" ></script>
+    <script type="text/javascript" src="assets/js/chat.js" ></script>
+    <script type="text/javascript" src="assets/js/funcionalidad.js" ></script>
+</body>
+
+</html>

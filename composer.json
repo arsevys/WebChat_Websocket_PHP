@@ -1,0 +1,6 @@
+{
+    "name": "haris/proyecto_final",
+    "require": {
+        "workerman/workerman": "^4.0"
+    }
+}
