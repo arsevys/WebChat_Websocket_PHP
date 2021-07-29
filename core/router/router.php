@@ -1,5 +1,8 @@
 <?php 
+
 require __DIR__."/../controllers/UsuarioController.php";
+require __DIR__."/../controllers/ConversacionController.php";
+
 class Router {
 
     public function accion(String $accion, Array $data= array()){
@@ -28,6 +31,15 @@ class Router {
             $user = new UsuarioController();
             $user->desactivarAUnUsuario($data["username"]);
           break;
+          case "registrarMensajeIndividual":
+            $user = new ConversacionController();
+            $resultado = $user->registrarMensajeIndividual($data["emisor"], $data["receptor"], $data["mensaje"]);
+          break;
+          case "listarMensajesIndividual":
+            $user = new ConversacionController();
+            $resultado = $user->listarMensajesIndividual($data["emisor"], $data["receptor"]);
+          break;
+
 
         default:
         echo "\n No se encontro esta accion \n";

@@ -1,6 +1,7 @@
 <?php 
-require __DIR__ . "/../models/UsuarioModel.php";
+require_once __DIR__ . "/../models/UsuarioModel.php";
 
+require_once __DIR__ . "/../models/ConversacionModel.php";
 
 class UsuarioController {
     public function registrar(String $username){

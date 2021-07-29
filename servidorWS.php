@@ -32,20 +32,41 @@ $worker->onConnect=function($connection) use (&$router,&$worker){
         $router->accion("registrarUsuario", array("username"=>$user));
         //Notificamos alos demas usuario 
         enviarAUsuarios($worker,$user, array("accion"=>"usuarioConectado", "usuario"=>$user));
-        enviarAUsuario($connection, array("accion"=>"usuariosConectados", "usuarios"=> $listaUsuariosConectados ));
+        enviarAEmisor($connection, array("accion"=>"usuariosConectados", "usuarios"=> $listaUsuariosConectados ));
         };
 };
 
 
 //Aca llegaran los mensajes de cada cliente conectado
-$worker->onMessage=function($connection, $data) use (&$worker, &$user){
+$worker->onMessage=function($connection, $data) use (&$worker, &$user, &$router){
     echo "\n Mensaje:".$data."\n\n";
+    $mensaje = json_decode($data);
+    print_r($mensaje);
+    print_r(get_object_vars($mensaje->data));
+    $dataParseada = get_object_vars( $mensaje->data);
     //Individual
     // $connection->send("Tu Mensaje fue : ". $data );
     // print_r($worker->connections);
-    foreach($worker->connections as $connect){
-        $connect->send($connection->id ." : ". $data);
+    // foreach($worker->connections as $connect){
+    //     $connect->send($connection->id ." : ". $data);
+    // }
+    //Que accion tomar
+    
+
+    switch($mensaje-> accion){
+      case 'registrarMensajeIndividual': 
+         $resultado = $router->accion($mensaje-> accion, $dataParseada);
+         enviarAReceptor($worker,$dataParseada['receptor'], array('accion' => 'mensajeEntrante', 
+                        'mensaje' => $dataParseada['mensaje'] , 'emisor' =>$dataParseada['emisor'] , 'tipo' => 'Individual' ));
+         break;        
+      case 'listarMensajesIndividual' :
+        $resultado = $router->accion($mensaje-> accion, $dataParseada);  
+        enviarAEmisor($connection, array('accion' => 'cargarMensajesIndividual', 'mensajes' => $resultado));
+      break;
+      default :
+       echo "\n Nada de Accion \n";
     }
+
 };
 
 $worker->onClose = function($connection)use(&$router, &$worker){
@@ -70,8 +91,15 @@ function enviarAUsuarios($worker,$usuarioEmisor, $data){
     }
 }
 
-function enviarAUsuario($connection, $data){
+function enviarAEmisor($connection, $data){
     $connection->send(json_encode($data));
+}
+function enviarAReceptor($worker,$usuarioReceptor, $data){
+    foreach($worker->connections as $connect){
+        if($connect->id == $usuarioReceptor){
+            $connect->send(json_encode($data));
+        }
+    }
 }
 
 //Ejecuta todos los workers

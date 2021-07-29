@@ -1,6 +1,7 @@
-## Aplicacion Webchab con Websockets
+## Aplicacion Webchat con Websockets
 
-Ejecutar Servidor
+Ejecutar Servidor :
+
 ```
 php servidorWS.php start
 ```

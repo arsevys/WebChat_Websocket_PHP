@@ -29,5 +29,50 @@ let metodos = {
                 conectado.remove();
             }
         }
+    },
+    "mensajeEntrante": function (emisor, mensaje){
+      console.log(arguments);
+
+      let mensajeReceptor = `
+        <div class="receptor">
+            <div class="info" >
+                <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=${emisor}">
+                <div class="mensaje">
+                    <p> ${mensaje}</p>
+                    <div class="text-right"><span class="contacto-nombre"> ${emisor}</span></div>
+                </div>
+                </div>
+        </div>`;
+        document.getElementById('contenedorMensajes').insertAdjacentHTML('beforeend', mensajeReceptor);
+        scroller()    
+    },
+    "mensajeSaliente": function (emisor, mensaje){
+        console.log(arguments);
+  
+        let mensajeEmisor= `
+        <div class="emisor">
+        <div class="info" >
+            <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=${emisor}">
+            <div class="mensaje">
+                <p> ${mensaje}</p>
+                <div class="text-right"><span class="contacto-nombre"> ${emisor}</span></div>
+            </div>
+           </div>
+     </div>`;
+          document.getElementById('contenedorMensajes').insertAdjacentHTML('beforeend', mensajeEmisor);
+          scroller()    
+        },
+    "cargarMensajesIndividual": function(mensajes){
+      console.log(emisor);
+      var self = this;
+      mensajes.forEach(function(value, index){
+          console.log(value);
+          if(value.nombre == emisor){
+                self.mensajeSaliente(value.nombre, value.mensaje)
+          }else {
+            self.mensajeEntrante(value.nombre, value.mensaje)
+          }
+      })
+      scroller()
     }
 }

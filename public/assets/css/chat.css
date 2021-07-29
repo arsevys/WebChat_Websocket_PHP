@@ -91,6 +91,7 @@ body {
 }
 .chats-individuales-contacto ul:hover {
     background-color:#6c727a;
+    cursor: pointer;
 }
 
 .chats-individuales-contacto ul img {
