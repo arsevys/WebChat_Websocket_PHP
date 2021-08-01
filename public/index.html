@@ -20,10 +20,10 @@
             </div>
             <br>
             <!-- Chats Grupales -->
-            <!-- <div class="chats-individuales">
+            <div class="chats-individuales">
                 <p>&nbsp;Chats Grupales</p>
-                <li class="chats-individuales-contacto">
-                    <ul class="">
+                <li  id="chats_grupales" class="chats-individuales-contacto">
+                    <!-- <ul class="">
                         <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=Calculo+1">
                         <div>
                             <span>Calculo 1</span><br>
@@ -38,10 +38,10 @@
                             <span class="texto-min"> 10 usuarios en este chat</span>
                         </div>
 
-                    </ul>
+                    </ul> -->
 
                 </li>
-            </div> -->
+            </div>
 
             <!-- Chats Individuales -->
             <div class="chats-individuales">
@@ -73,7 +73,14 @@
         </div>
     </div>
     <script type="text/javascript">
-     var receptor=null;
+
+    //Para Chats Grupales
+    var idConversacionGrupal = null; 
+    var esGrupal = false;
+    
+    //Para Chat Individuales
+    var receptor=null;
+
      var emisor = null;
      var ws = null;
     </script>

@@ -40,7 +40,6 @@ class ConversacionController  {
 
         return $resultado;
     }
-
     public function listarMensajesIndividual(String $emisor , String $receptor){
       $resultado = array();
       //Validacion si existe una conversacion entre 2 usuarios
@@ -69,6 +68,71 @@ class ConversacionController  {
       }
 
       return $resultado;
-  }
-}
+    }
+    public function listarMensajesGrupal(String $emisor , int $idConversacion){
+      $resultado = array();
+      //Validacion si existe una conversacion entre 2 usuarios
+      $usuario = new UsuarioModel();
+      $idUsuario1  =  $usuario->buscarPorNombreUsuario($emisor);
+
+      if(count($idUsuario1) == 0) {
+        return $resultado;
+      }
+
+      $idUsuario1 = $idUsuario1[0]['id'];
+      echo "Emisor ID : " . $idUsuario1 . "\n";
+
+
+      $mensaje = new MensajeModel();
+
+      $resultado  = $mensaje->listarMensajesPorTipoConversacion($idConversacion,'Grupal');
+
+      return $resultado;
+    }
+    public function listarGrupos(String $emisor ){
+      $resultado = array();
+      //Validacion si existe una conversacion entre 2 usuarios
+      $usuario = new UsuarioModel();
+      $idUsuario1  =  $usuario->buscarPorNombreUsuario($emisor);
+
+      if(count($idUsuario1) == 0) {
+        return $resultado;
+      }
+
+      $idUsuario1 = $idUsuario1[0]['id'];
+      echo "Emisor ID : " . $idUsuario1 . "\n";
+
+
+
+      $conversacion = new ConversacionModel();
+      $resultado = $conversacion->listarGrupos($idUsuario1);
+      return $resultado;
+    }
+    public function registrarMensajeGrupal(String $emisor ,int $idConversacion , String $msj){
+      $resultado = false;
+      //Validacion si existe una conversacion entre 2 usuarios
+      $usuario = new UsuarioModel();
+      $idUsuario1  =  $usuario->buscarPorNombreUsuario($emisor);
+
+      if(count($idUsuario1) == 0 ) {
+        return $resultado;
+      }
+
+      $idUsuario1 = $idUsuario1[0]['id'];
+      echo "Emisor ID : " . $idUsuario1 . "\n";
+      $mensaje = new MensajeModel();
+      $mensaje->registrar($idConversacion,$idUsuario1, $msj );
+      $resultado = true;
+
+      return $resultado;
+    }
+    public function listarUsuariosPorGrupo(int $idConversacion){
+      $resultado = array();
+      //Validacion si existe una conversacion entre 2 usuarios
+
+      $conversacion = new ConversacionModel();
+      $resultado = $conversacion->listarUsuariosPorGrupo($idConversacion);
+      return $resultado;
+    }
+}  
 

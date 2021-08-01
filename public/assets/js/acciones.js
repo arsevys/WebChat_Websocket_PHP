@@ -3,7 +3,6 @@ function getId(x){
     return document.getElementById(x);
 }
 let metodos = {
- 
     "registrarUsuarios" : function(usuarios){
         let chatsIndividuales = getId("chats_individuales");
 
@@ -30,8 +29,14 @@ let metodos = {
             }
         }
     },
-    "mensajeEntrante": function (emisor, mensaje){
-      console.log(arguments);
+    "mensajeEntrante": function (emisor, mensaje, data){
+      console.log('==>', arguments);
+      if(data.tipo == 'Grupal'){ 
+        if(esGrupal ==false || idConversacionGrupal != data.idConversacion){ return;}
+      }
+      else {
+        if( esGrupal ||  receptor != data.emisor  ){ return;}
+      }   
 
       let mensajeReceptor = `
         <div class="receptor">
@@ -62,17 +67,41 @@ let metodos = {
           document.getElementById('contenedorMensajes').insertAdjacentHTML('beforeend', mensajeEmisor);
           scroller()    
         },
-    "cargarMensajesIndividual": function(mensajes){
-      console.log(emisor);
-      var self = this;
-      mensajes.forEach(function(value, index){
-          console.log(value);
-          if(value.nombre == emisor){
-                self.mensajeSaliente(value.nombre, value.mensaje)
-          }else {
-            self.mensajeEntrante(value.nombre, value.mensaje)
-          }
-      })
+    "cargarMensajes": function(mensajes, tipo){
+            console.log(emisor);
+            var self = this;
+            mensajes.forEach(function(value, index){
+                let data = {};
+                if(tipo == 'Grupal'){ 
+                    data = { idConversacion : value.id_conversacion, tipo }
+                }else{
+                    data = { emisor: value.nombre, tipo}
+                }
+
+                if(value.nombre == emisor){
+                    self.mensajeSaliente(value.nombre, value.mensaje)
+                }else {
+
+                self.mensajeEntrante(value.nombre, value.mensaje, data)
+                }
+            })
       scroller()
-    }
+    },
+    "listarGrupos" : function(grupos){
+        let chatsGrupales = getId("chats_grupales");
+
+        for(let grupo of grupos){
+           let formato = `
+            <ul onclick="cargarChat({nombre : '${grupo.nombre_conversacion}', id:'${grupo.id_conversacion}'}, 'grupal')" 
+            class="activo usuarios-conectados" data-usuario="${grupo.nombre_conversacion}" >
+                <img src="https://avatar.oxro.io/avatar.svg?bold=true&name=${grupo.nombre_conversacion}">
+                <div>
+                    <span>${grupo.nombre_conversacion}</span><br>
+                    <span class="texto-min"> Total Usuarios : ${grupo.cantidadUsuarios}</span>
+                </div>
+            </ul>`;
+            chatsGrupales.insertAdjacentHTML('beforeend', formato);
+        }
+    
+    },
 }

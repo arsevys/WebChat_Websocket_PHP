@@ -15,6 +15,7 @@ window.onload= function(){
         console.log(dato);
         accion(dato.accion, dato)
     }
+
 };
 
 // document.getElementById('contenedorMensaje')
@@ -32,10 +33,17 @@ function accion (accion, data){
         metodos["eliminarUsuariosDesconectados"]( [data.usuario]);
         break;
         case "mensajeEntrante":
-        metodos["mensajeEntrante"]( data.emisor, data.mensaje );
+      
+        metodos["mensajeEntrante"]( data.emisor, data.mensaje, data );
         break;
         case "cargarMensajesIndividual":
-        metodos["cargarMensajesIndividual"]( data.mensajes);
+        metodos["cargarMensajes"]( data.mensajes, 'Individual');
+        break;
+        case "cargarMensajesGrupal":
+        metodos["cargarMensajes"]( data.mensajes, 'Grupal'); //Reutilizando del mensaje individual
+        break;
+        case "listarGrupos":
+        metodos["listarGrupos"]( data.grupos);
         break;
         
     }

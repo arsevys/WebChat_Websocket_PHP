@@ -25,6 +25,7 @@ $worker->onConnect=function($connection) use (&$router,&$worker){
 
          //Enviarle todos los usuarios actualmente conectados
          $listaUsuariosConectados=  $router->accion("listarUsuariosConectados", array());
+         $listarGrupos=  $router->accion("listarGrupos", array( 'emisor' => $user));
          echo "USuarios Conectados : \n";
          print_r($listaUsuariosConectados);
 
@@ -33,6 +34,7 @@ $worker->onConnect=function($connection) use (&$router,&$worker){
         //Notificamos alos demas usuario 
         enviarAUsuarios($worker,$user, array("accion"=>"usuarioConectado", "usuario"=>$user));
         enviarAEmisor($connection, array("accion"=>"usuariosConectados", "usuarios"=> $listaUsuariosConectados ));
+        enviarAEmisor($connection, array("accion"=>"listarGrupos", "grupos"=> $listarGrupos ));
         };
 };
 
@@ -50,24 +52,42 @@ $worker->onMessage=function($connection, $data) use (&$worker, &$user, &$router)
     // foreach($worker->connections as $connect){
     //     $connect->send($connection->id ." : ". $data);
     // }
+
     //Que accion tomar
-    
 
     switch($mensaje-> accion){
-      case 'registrarMensajeIndividual': 
-         $resultado = $router->accion($mensaje-> accion, $dataParseada);
-         enviarAReceptor($worker,$dataParseada['receptor'], array('accion' => 'mensajeEntrante', 
-                        'mensaje' => $dataParseada['mensaje'] , 'emisor' =>$dataParseada['emisor'] , 'tipo' => 'Individual' ));
-         break;        
-      case 'listarMensajesIndividual' :
+    case 'registrarMensajeIndividual': 
+        $resultado = $router->accion($mensaje-> accion, $dataParseada);
+        enviarAReceptor($worker,$dataParseada['receptor'], array('accion' => 'mensajeEntrante', 
+                    'mensaje' => $dataParseada['mensaje'] , 'emisor' =>$dataParseada['emisor'] ,
+                     'tipo' => 'Individual' ));
+        break;        
+    case 'listarMensajesIndividual' :
         $resultado = $router->accion($mensaje-> accion, $dataParseada);  
         enviarAEmisor($connection, array('accion' => 'cargarMensajesIndividual', 'mensajes' => $resultado));
-      break;
-      default :
-       echo "\n Nada de Accion \n";
+    break;
+    case 'listarMensajesGrupal' :
+        $resultado = $router->accion($mensaje-> accion, $dataParseada);  
+        enviarAEmisor($connection, array('accion' => 'cargarMensajesGrupal', 'mensajes' => $resultado));
+    break;
+    case 'registrarMensajeGrupal': 
+        //Registra el Mensaje
+        $resultado = $router->accion($mensaje-> accion, $dataParseada);
+
+        //Obtiene Todos los usuarios del grupo
+        $usuariosPorGrupo = $router->accion('listarUsuariosPorGrupo', $dataParseada);
+        print_r($usuariosPorGrupo);
+        enviarAGrupo($worker,$dataParseada['emisor'],$usuariosPorGrupo, 
+                    array('accion' => 'mensajeEntrante', 'mensaje' => $dataParseada['mensaje'] , 
+                    'emisor' =>$dataParseada['emisor'] , 'tipo' => 'Grupal', 
+                    'idConversacion' => $dataParseada['idConversacion'] ));
+        break;    
+    default :
+    echo "\n Nada de Accion \n";
     }
 
 };
+
 
 $worker->onClose = function($connection)use(&$router, &$worker){
     echo "\n Usuario Desconectado : ". $connection->id . "\n";
@@ -82,7 +102,7 @@ $worker->onWorkerStart= function($worker){
     echo "\n Servidor Websocket Ejecutando en el puerto 2340!!!\n";
 };
 
-
+//Todos Los Usuarios menos el emisor
 function enviarAUsuarios($worker,$usuarioEmisor, $data){
     foreach($worker->connections as $connect){
         if($connect->id != $usuarioEmisor){
@@ -90,14 +110,27 @@ function enviarAUsuarios($worker,$usuarioEmisor, $data){
         }
     }
 }
-
+//Enviar al Mismo usuario
 function enviarAEmisor($connection, $data){
     $connection->send(json_encode($data));
 }
+
+//enviar a otro usuario
 function enviarAReceptor($worker,$usuarioReceptor, $data){
     foreach($worker->connections as $connect){
         if($connect->id == $usuarioReceptor){
             $connect->send(json_encode($data));
+        }
+    }
+}
+
+//Enviar a todos los usuarios del grupo menos al emisor
+function enviarAGrupo($worker,$emisor, $usuarios, $data){
+    foreach($worker->connections as $connect){
+        foreach($usuarios as $usuario){
+            if( $connect->id == $usuario['socket_id'] && $connect->id != $emisor){
+                $connect->send(json_encode($data));
+            }
         }
     }
 }

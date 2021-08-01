@@ -21,6 +21,14 @@ class Router {
             $resultado = $user->listarUsuariosConectados();
           
           break;
+          case "listarGrupos":
+            $conv= new ConversacionController();
+            $resultado = $conv->listarGrupos($data["emisor"]);
+          break;
+          case "listarUsuariosPorGrupo":
+            $conv= new ConversacionController();
+            $resultado = $conv->listarUsuariosPorGrupo($data["idConversacion"]);
+          break;
 
           case "desactivarATodosLosUsuarios":
             $user = new UsuarioController();
@@ -32,12 +40,20 @@ class Router {
             $user->desactivarAUnUsuario($data["username"]);
           break;
           case "registrarMensajeIndividual":
-            $user = new ConversacionController();
-            $resultado = $user->registrarMensajeIndividual($data["emisor"], $data["receptor"], $data["mensaje"]);
+            $conv= new ConversacionController();
+            $resultado = $conv->registrarMensajeIndividual($data["emisor"], $data["receptor"], $data["mensaje"]);
           break;
           case "listarMensajesIndividual":
             $user = new ConversacionController();
             $resultado = $user->listarMensajesIndividual($data["emisor"], $data["receptor"]);
+          break;
+          case "listarMensajesGrupal":
+            $user = new ConversacionController();
+            $resultado = $user->listarMensajesGrupal($data["emisor"], $data["idConversacion"]);
+          break;
+          case "registrarMensajeGrupal":
+            $conv= new ConversacionController();
+            $resultado = $conv->registrarMensajeGrupal($data["emisor"], $data["idConversacion"], $data["mensaje"]);
           break;
 
 
